@@ -2,21 +2,20 @@
 
 namespace App\Livewire;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Project;
 use App\Models\TimeLog;
 use Livewire\Component;
 use App\Models\Department;
 use App\Models\Subproject;
-use Illuminate\Support\Carbon;
-use App\Http\Services\ExportServices;
 use App\Http\Controllers\ExportController;
 use App\Http\Repository\TimeLogRepository;
 
 class ManageTimeLogs extends Component
 {
     public $filters = [
-        'user_id' => null,
+        'employee_id' => null,
         'department_id' => null,
         'project_id' => null,
         'subproject_id' => null,
@@ -35,16 +34,37 @@ class ManageTimeLogs extends Component
     public function mount()
     {
         // Populate dropdowns
-        $this->employees = User::where('role', 'Employee')->pluck('name', 'id');
+        $this->employees = User::where('role', 'employee')->pluck('name', 'id');
         $this->departments = Department::all()->pluck('name', 'id');
+        $this->projects = Project::all()->pluck('name','id');
+        $this->subprojects = Subproject::all()->pluck('name','id');
     }
 
-    public function updatedFilters($propertyName)
+   
+    public function updated($propertyName)
     {
-        if ($propertyName == 'filters.department_id') {
-            $this->projects = Project::where('department_id', $this->filters['department_id'])->pluck('name', 'id');
+        if ($propertyName === 'filters.department_id') {
+            $this->afterStateUpdated('department_id');
         }
-        if ($propertyName == 'filters.project_id') {
+    
+        if ($propertyName === 'filters.project_id') {
+            $this->afterStateUpdated('project_id');
+        }
+    }
+    
+    public function afterStateUpdated($filterKey)
+    {
+        if ($filterKey === 'department_id') {
+            // Update project list when department changes
+            $this->filters['project_id'] = null; // Reset project and subproject when department changes
+            $this->filters['subproject_id'] = null;
+            $this->projects = Project::where('department_id', $this->filters['department_id'])->pluck('name', 'id');
+            $this->subprojects = []; // Reset subprojects when department changes
+        }
+
+        if ($filterKey === 'project_id') {
+            // Update subproject list when project changes
+            $this->filters['subproject_id'] = null; // Reset subproject when project changes
             $this->subprojects = Subproject::where('project_id', $this->filters['project_id'])->pluck('name', 'id');
         }
     }
@@ -63,8 +83,8 @@ class ManageTimeLogs extends Component
     {
         $query = TimeLog::query();
 
-        if ($this->filters['user_id']) {
-            $query->where('user_id', $this->filters['user_id']);
+        if ($this->filters['employee_id']) {
+            $query->where('user_id', $this->filters['employee_id']);
         }
 
         if ($this->filters['department_id']) {
@@ -84,23 +104,22 @@ class ManageTimeLogs extends Component
         }
 
         if ($this->filters['start_date']) {
-            $query->where('date', '>=', Carbon::parse($this->filters['start_date']));
+            $query->where('date', '>=', Carbon::parse($this->filters['start_date']))->orderBy('date','desc');
         }
 
         if ($this->filters['end_date']) {
-            $query->where('date', '<=', Carbon::parse($this->filters['end_date']));
+            $query->where('date', '<=', Carbon::parse($this->filters['end_date']))->orderBy('date','desc');
+            
         }
-        $this->timeLogs = $query->with(['subproject.project', 'subproject.project.department', 'user'])->get();
-       // return view('livewire.manage-time-logs');
+
+        $this->timeLogs = $query->with(['subproject.project', 'subproject.project.department', 'user'])
+        ->orderBy('created_at','desc')
+        ->get();
     }
 
     public function render()
     {
-       // return view('livewire.manage-time-logs');
-        $this->timeLogs = TimeLog::with(['user', 'subproject.project.department'])
-        ->when($this->filters['user_id'], fn($query) => $query->where('user_id', $this->filters['user_id']))
-        ->when($this->filters['department_id'], fn($query) => $query->whereHas('subproject.project.department', fn($q) => $q->where('id', $this->filters['department_id'])))
-        ->get();
+        $this->filterLogs();
         return view('livewire.manage-time-logs');
 
     }

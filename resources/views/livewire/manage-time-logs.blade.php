@@ -8,7 +8,7 @@
     <!-- filter logs by employee, department, project, subproject, and date range -->
     <div class="mb-4">
         <label for="employee" class="block">Employee</label>
-        <select wire:model="filters.user_id" id="user_id" class="border rounded">
+        <select wire:model="filters.employee_id" id="employee" class="border rounded">
             <option value="">All Employees</option>
             @foreach ($employees as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
@@ -39,6 +39,7 @@
             @endforeach
         </select>
 
+
         <label for="start-date" class="block">Start Date</label>
         <input type="date" wire:model="filters.start_date" id="start-date" class="border rounded ">
 
@@ -59,7 +60,7 @@
         </div>
     @endif
     <!-- Time Logs Table -->
-    @if($timeLogs->isNotEmpty())
+    @if($timeLogs)
     <table class="min-w-full border border-gray-300">
         <thead>
             <tr>

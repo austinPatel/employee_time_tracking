@@ -13,20 +13,24 @@
 
             </tr>
         </thead>
-        
         <tbody>
-            @foreach ($timeLogs as $timelog)
-                <tr>
-                    <td class="border px-4 py-2">{{ $timelog->user->name }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->subproject->project->department->name }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->subproject->project->name }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->subproject->name }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->date }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->start_time }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->end_time }}</td>
-                    <td class="border px-4 py-2">{{ $timelog->total_hours }}</td>
-                </tr>
-            @endforeach
-        </tbody>
+            @if($timeLogs->isNotEmpty())
+                    @foreach ($timeLogs as $timelog)
+                        <tr>
+                            <td class="border px-4 py-2">{{ $timelog->user->name }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->subproject->project->department->name }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->subproject->project->name }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->subproject->name }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->date }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->start_time }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->end_time }}</td>
+                            <td class="border px-4 py-2">{{ $timelog->total_hours }}</td>
+                        </tr>
+                    @endforeach
+            @else
+                <tr><td colspan="8">No logs found.</td></tr>
+            @endif
+
+            </tbody>
     </table>
 </div>
