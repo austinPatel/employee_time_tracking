@@ -28,3 +28,16 @@ php artisan tinker
 - **Project::factory()->count(3)->create();**
 - **SubProject::factory()->count(5)->create();**
 
+### Test Cases
+- **Employee Add Log hours -**
+-vendor/bin/pest tests/Feature/EmployeeLogHoursTest.php
+
+- **Check Employee can view Log hours**
+-vendor/bin/pest tests/Feature/EmployeeViewLogsTest.php
+
+execute below command for all test cases
+
+-vendor/bin/pest
+
+
+
