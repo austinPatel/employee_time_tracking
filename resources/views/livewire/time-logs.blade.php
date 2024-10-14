@@ -1,4 +1,8 @@
+
 <div class="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6">
+            Timelog Hours List
+    </h2>
     <table class="min-w-full border border-gray-300">
         <thead>
             <tr>
@@ -28,7 +32,7 @@
                         </tr>
                     @endforeach
             @else
-                <tr><td colspan="8">No logs found.</td></tr>
+                <tr><td class="mt-6 text-gray-500 leading-relaxed text-center" colspan="8">No logs found.</td></tr>
             @endif
 
             </tbody>

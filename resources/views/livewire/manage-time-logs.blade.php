@@ -61,6 +61,10 @@
     @endif
     <!-- Time Logs Table -->
     @if($timeLogs)
+    <h2 class="text-2xl font-bold mb-6">
+            Timelog Hours List
+    </h2>
+
     <table class="min-w-full border border-gray-300">
         <thead>
             <tr>
@@ -102,7 +106,7 @@
         </tbody>
     </table>
     @else
-        <p>No logs found.</p>
+        <p class="mt-6 text-gray-500 leading-relaxed text-center">No logs found.</p>
     @endif
 
     
