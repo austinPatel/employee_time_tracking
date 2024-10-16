@@ -39,5 +39,14 @@ execute below command for all test cases
 
 -vendor/bin/pest
 
+### Filament Admin panel 
+- **Create resources as below -**
+- **php artisan make:filament-resource Department-**
+- **php artisan make:filament-resource Project-**
+- **php artisan make:filament-resource SubProject-**
+- **php artisan make:filament-resource TimeLog-**
+
+
+
 
 
