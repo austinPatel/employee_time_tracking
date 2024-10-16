@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\TimeLog;
+use App\Policies\TimeLogPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Http\Repository\TimeLogRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('isEmployee',function($user){
             return $user->role === 'employee';
         });
-    
+        
+        Gate::policy(TimeLog::class, TimeLogPolicy::class);
+        $this->app->bind(TimeLogRepository::class);
+
+
     }
 }

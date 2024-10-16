@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\SubProject;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TimeLog>
@@ -16,13 +18,17 @@ class TimeLogFactory extends Factory
      */
     public function definition(): array
     {
+        $userIds = User::pluck('id')->toArray();
+        $subprojectIds = Subproject::pluck('id')->toArray();
+
         return [
-            'user_id' => 1, // Replace with an appropriate user ID or generate one
-            'subproject_id' => 1, // Replace with a valid subproject ID
+            'user_id' => $this->faker->randomElement($userIds), // Pick a random user ID
+            'subproject_id' => $this->faker->randomElement($subprojectIds), // Pick a random subproject ID
             'date' => $this->faker->date(),
             'start_time' => $this->faker->time(),
             'end_time' => $this->faker->time(),
-            'total_hours' => $this->faker->randomFloat(2, 0, 8), // Assuming a maximum of 8 hours
+            'total_hours' => $this->faker->randomFloat(2, 1, 8),
         ];
+
     }
 }

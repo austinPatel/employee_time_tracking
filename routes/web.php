@@ -20,11 +20,16 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/log-hours', TimeLogForm::class)->name('log.hours');
-    Route::get('/my-logs', TimeLogs::class)->name('my.logs');
-    Route::get('/edit-log-hours/{timeLogId}',TimeLogForm::class)->name('edit.log.hours');
-    Route::get('/manage-time-logs', ManageTimeLogs::class)->name('manage.time.logs');
-    Route::get('/export-time-logs', [ExportController::class,'exportToCsv'])->name('export.time.logs');
+    Route::middleware(['auth', 'role:manager'])->group(function () {
+        Route::get('/edit-log-hours/{timeLogId}',TimeLogForm::class)->name('edit.log.hours');
+        Route::get('/manage-time-logs', ManageTimeLogs::class)->name('manage.time.logs');
+        Route::get('/export-time-logs', [ExportController::class,'exportToCsv'])->name('export.time.logs');
+    
+    });
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/log-hours', TimeLogForm::class)->name('log.hours');
+        Route::get('/my-logs', TimeLogs::class)->name('my.logs');    
+    });
 
 });
 

@@ -9,6 +9,15 @@ class Project extends Model
 {
     use HasFactory;
     
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'department_id',
+        'name',
+    ];
     public function department() {
         return $this->belongsTo(Department::class);
     }

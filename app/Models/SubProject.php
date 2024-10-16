@@ -10,6 +10,16 @@ class SubProject extends Model
     use HasFactory;
     protected $table = 'subprojects';
 
+        /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'project_id',
+        'name',
+    ];
+
     public function project() {
         return $this->belongsTo(Project::class);
     }

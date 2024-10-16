@@ -83,5 +83,8 @@ class User extends Authenticatable
     public function timeLogs() {
         return $this->hasMany(TimeLog::class);
     }
-    
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
 }
